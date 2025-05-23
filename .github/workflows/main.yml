@@ -1,5 +1,3 @@
-name: Firebase APP workflow
-
 on:
   push:
     branches:
