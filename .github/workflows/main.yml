@@ -1,14 +1,3 @@
-on:
-  pull_request:
-    branches:
-      - main
-      - master
-  push:
-    branches:
-      - main
-      - master
-      - develop
-
 name: "Build & Release"
 
 jobs:
@@ -31,6 +20,16 @@ jobs:
         with:
           channel: 'stable'
           architecture: x64
+
+      - name: Update dependencies
+        run: |
+          flutter pub upgrade --major-versions
+          flutter pub outdated
+
+      - name: Update Android build tools
+        run: |
+          sed -i '' "s/com.android.tools.build:gradle:.*/com.android.tools.build:gradle:8.3.0/" android/build.gradle
+          echo "distributionUrl=https\://services.gradle.org/distributions/gradle-8.4-bin.zip" > android/gradle/wrapper/gradle-wrapper.properties
 
       - name: Build Android APK
         run: flutter build apk --release --split-per-abi
